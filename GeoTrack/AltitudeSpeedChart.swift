@@ -42,7 +42,7 @@ public struct AltitudeSpeedChart: View {
                 Spacer()
 
                 // Live Scrubber Tooltip
-                if let idx = selectedIndex, idx in points.indices {
+                if let idx = selectedIndex, points.indices.contains(idx) {
                     let pt = points[idx]
                     HStack(spacing: 4) {
                         Text("\(FormatUtils.formatTimeOnly(pt.timestamp)) | \(FormatUtils.formatSpeed(pt.speedKmh)) km/h | \(FormatUtils.formatAltitude(pt.altitude)) m")
@@ -146,7 +146,7 @@ public struct AltitudeSpeedChart: View {
                         .stroke(Color.cyan, style: StrokeStyle(lineWidth: 2.0, lineCap: .round, lineJoin: .round))
 
                         // Scrub Cursor Line and Dots
-                        if let idx = selectedIndex, idx in points.indices {
+                        if let idx = selectedIndex, points.indices.contains(idx) {
                             let x = w * CGFloat(idx) / CGFloat(points.count - 1)
                             let alt = smoothed[idx]
                             let normAlt = CGFloat((alt - minAlt) / altRange)
