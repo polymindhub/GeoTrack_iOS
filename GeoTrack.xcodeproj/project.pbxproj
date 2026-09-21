@@ -12,6 +12,14 @@
 		A10003 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10003 /* LocationManager.swift */; };
 		A10004 /* AltitudeFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10004 /* AltitudeFilter.swift */; };
 		A10005 /* KalmanLatLong.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10005 /* KalmanLatLong.swift */; };
+		A10006 /* TrackModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10007 /* TrackModels.swift */; };
+		A10007 /* TrackStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10008 /* TrackStore.swift */; };
+		A10008 /* Exporters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10009 /* Exporters.swift */; };
+		A10009 /* TrackMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10010 /* TrackMapView.swift */; };
+		A10010 /* AltitudeSpeedChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10011 /* AltitudeSpeedChart.swift */; };
+		A10011 /* ReplayControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10012 /* ReplayControls.swift */; };
+		A10012 /* HistoryListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10013 /* HistoryListView.swift */; };
+		A10013 /* RecordDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10014 /* RecordDetailView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +30,14 @@
 		B10004 /* AltitudeFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AltitudeFilter.swift; sourceTree = "<group>"; };
 		B10005 /* KalmanLatLong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KalmanLatLong.swift; sourceTree = "<group>"; };
 		B10006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B10007 /* TrackModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackModels.swift; sourceTree = "<group>"; };
+		B10008 /* TrackStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackStore.swift; sourceTree = "<group>"; };
+		B10009 /* Exporters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Exporters.swift; sourceTree = "<group>"; };
+		B10010 /* TrackMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackMapView.swift; sourceTree = "<group>"; };
+		B10011 /* AltitudeSpeedChart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AltitudeSpeedChart.swift; sourceTree = "<group>"; };
+		B10012 /* ReplayControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplayControls.swift; sourceTree = "<group>"; };
+		B10013 /* HistoryListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryListView.swift; sourceTree = "<group>"; };
+		B10014 /* RecordDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordDetailView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +67,14 @@
 				B10003 /* LocationManager.swift */,
 				B10004 /* AltitudeFilter.swift */,
 				B10005 /* KalmanLatLong.swift */,
+				B10007 /* TrackModels.swift */,
+				B10008 /* TrackStore.swift */,
+				B10009 /* Exporters.swift */,
+				B10010 /* TrackMapView.swift */,
+				B10011 /* AltitudeSpeedChart.swift */,
+				B10012 /* ReplayControls.swift */,
+				B10013 /* HistoryListView.swift */,
+				B10014 /* RecordDetailView.swift */,
 				B10006 /* Info.plist */,
 			);
 			path = GeoTrack;
@@ -132,6 +156,14 @@
 				A10003 /* LocationManager.swift in Sources */,
 				A10004 /* AltitudeFilter.swift in Sources */,
 				A10005 /* KalmanLatLong.swift in Sources */,
+				A10006 /* TrackModels.swift in Sources */,
+				A10007 /* TrackStore.swift in Sources */,
+				A10008 /* Exporters.swift in Sources */,
+				A10009 /* TrackMapView.swift in Sources */,
+				A10010 /* AltitudeSpeedChart.swift in Sources */,
+				A10011 /* ReplayControls.swift in Sources */,
+				A10012 /* HistoryListView.swift in Sources */,
+				A10013 /* RecordDetailView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

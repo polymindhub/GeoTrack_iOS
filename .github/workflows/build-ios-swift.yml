@@ -1,4 +1,4 @@
-name: Build iOS App (Swift)
+name: Build iOS App (Swift & Appetize Simulator)
 
 on:
   push:
@@ -18,16 +18,15 @@ jobs:
         with:
           xcode-version: latest-stable
 
-      - name: Build iOS Application (Swift & SwiftUI)
+      - name: Build for Real iPhone (.ipa)
         run: |
           set -e
           
-          # Navigate into ios_swift_project if it is in a subdirectory
           if [ -d "ios_swift_project" ]; then
             cd ios_swift_project
           fi
 
-          echo "Building GeoTrack with official Apple xcodebuild..."
+          echo "Building GeoTrack for Device..."
           xcodebuild clean build \
             -project GeoTrack.xcodeproj \
             -scheme GeoTrack \
@@ -38,16 +37,45 @@ jobs:
             CODE_SIGN_IDENTITY="" \
             BUILD_DIR=build
 
-          echo "Packaging GeoTrack.app into Payload for IPA..."
+          echo "Packaging GeoTrack.ipa..."
           mkdir -p build/Payload
           cp -r build/Release-iphoneos/GeoTrack.app build/Payload/
-          cd build
-          zip -r GeoTrack.ipa Payload
+          (cd build && zip -r GeoTrack.ipa Payload)
 
-      - name: Upload IPA & App Artifacts
+      - name: Build for Appetize.io (iOS Simulator .zip)
+        run: |
+          set -e
+
+          if [ -d "ios_swift_project" ]; then
+            cd ios_swift_project
+          fi
+
+          echo "Building GeoTrack for iOS Simulator (Appetize.io compatible)..."
+          xcodebuild build \
+            -project GeoTrack.xcodeproj \
+            -scheme GeoTrack \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            BUILD_DIR=build
+
+          echo "Packaging GeoTrack-Appetize-Simulator.zip..."
+          cd build/Release-iphonesimulator
+          zip -r ../GeoTrack-Appetize-Simulator.zip GeoTrack.app
+
+      - name: Upload Real Device IPA
         uses: actions/upload-artifact@v4
         with:
-          name: GeoTrack-iOS-IPA
+          name: GeoTrack-iOS-Device-IPA
           path: |
             **/build/GeoTrack.ipa
-            **/build/Release-iphoneos/GeoTrack.app
+
+      - name: Upload Appetize.io Simulator ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: GeoTrack-Appetize-Simulator
+          path: |
+            **/build/GeoTrack-Appetize-Simulator.zip
