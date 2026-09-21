@@ -1,0 +1,53 @@
+name: Build iOS App (Swift)
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Select latest Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Build iOS Application (Swift & SwiftUI)
+        run: |
+          set -e
+          
+          # Navigate into ios_swift_project if it is in a subdirectory
+          if [ -d "ios_swift_project" ]; then
+            cd ios_swift_project
+          fi
+
+          echo "Building GeoTrack with official Apple xcodebuild..."
+          xcodebuild clean build \
+            -project GeoTrack.xcodeproj \
+            -scheme GeoTrack \
+            -configuration Release \
+            -sdk iphoneos \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            BUILD_DIR=build
+
+          echo "Packaging GeoTrack.app into Payload for IPA..."
+          mkdir -p build/Payload
+          cp -r build/Release-iphoneos/GeoTrack.app build/Payload/
+          cd build
+          zip -r GeoTrack.ipa Payload
+
+      - name: Upload IPA & App Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: GeoTrack-iOS-IPA
+          path: |
+            **/build/GeoTrack.ipa
+            **/build/Release-iphoneos/GeoTrack.app
