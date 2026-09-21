@@ -140,7 +140,7 @@ public struct TrackMapView: UIViewRepresentable {
             let scrubAnnotations = mapView.annotations.compactMap { $0 as? ScrubAnnotation }
 
             var targetCoord: CLLocationCoordinate2D?
-            if let idx = parent.selectedIndex, idx in parent.points.indices {
+            if let idx = parent.selectedIndex, parent.points.indices.contains(idx) {
                 targetCoord = parent.points[idx].coordinate
             } else if let lat = parent.currentLat, let lng = parent.currentLng {
                 targetCoord = CLLocationCoordinate2D(latitude: lat, longitude: lng)
