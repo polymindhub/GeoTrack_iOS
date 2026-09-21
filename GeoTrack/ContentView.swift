@@ -208,99 +208,94 @@ public struct ContentView: View {
                     }
                 }
 
-                // Top Trailing: Record Button + Demo Simulation + Day/Night Toggle + History
+                // Top Trailing: Action Buttons (Record / Pause / Stop) + Day/Night Toggle + History
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    // Demo Simulation Button (Specially for Appetize.io & Simulator testing)
                     if !locManager.isTracking {
-                        Button(action: {
-                            locManager.startSimulation(title: "Appetize Test Drive")
-                            showToast("Demo Simulation started! Moving at ~55 km/h")
-                        }) {
-                            HStack(spacing: 3) {
-                                Image(systemName: "car.fill")
-                                Text("Demo")
-                                    .font(.caption)
-                                    .fontWeight(.bold)
-                            }
-                            .foregroundColor(.orange)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 5)
-                            .background(Color.orange.opacity(0.14))
-                            .cornerRadius(10)
-                        }
-                    }
-
-                    // Record Action Button
-                    if !locManager.isTracking {
+                        // Start Recording Button
                         Button(action: {
                             let formatter = DateFormatter()
                             formatter.dateFormat = "MMM dd HH:mm"
                             trackTitleInput = "Track \(formatter.string(from: Date()))"
                             showStartDialog = true
                         }) {
-                            HStack(spacing: 4) {
+                            HStack(spacing: 6) {
                                 Circle()
                                     .fill(Color.red)
                                     .frame(width: 8, height: 8)
                                 Text("Record")
-                                    .font(.subheadline)
-                                    .fontWeight(.bold)
+                                    .font(.system(size: 14, weight: .bold))
                             }
                             .foregroundColor(.red)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 5)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 6)
                             .background(Color.red.opacity(0.12))
-                            .cornerRadius(10)
+                            .cornerRadius(14)
                         }
                     } else {
-                        HStack(spacing: 6) {
+                        // Active Tracking Controls (Pause / Resume & Stop)
+                        HStack(spacing: 8) {
                             Button(action: {
-                                if locManager.isPaused {
-                                    locManager.resumeTracking()
-                                } else {
-                                    locManager.pauseTracking()
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    if locManager.isPaused {
+                                        locManager.resumeTracking()
+                                        showToast("Recording Resumed")
+                                    } else {
+                                        locManager.pauseTracking()
+                                        showToast("Recording Paused")
+                                    }
                                 }
                             }) {
                                 Image(systemName: locManager.isPaused ? "play.fill" : "pause.fill")
+                                    .font(.system(size: 14, weight: .bold))
                                     .foregroundColor(.blue)
+                                    .frame(width: 32, height: 32)
+                                    .background(Color.blue.opacity(0.12))
+                                    .clipShape(Circle())
                             }
 
                             Button(action: {
                                 showStopConfirmDialog = true
                             }) {
                                 Image(systemName: "stop.fill")
+                                    .font(.system(size: 13, weight: .bold))
                                     .foregroundColor(.red)
+                                    .frame(width: 32, height: 32)
+                                    .background(Color.red.opacity(0.12))
+                                    .clipShape(Circle())
                             }
                         }
                     }
 
                     // Day / Night Toggle
                     Button(action: {
-                        isDarkMode.toggle()
+                        withAnimation {
+                            isDarkMode.toggle()
+                        }
                     }) {
                         Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
+                            .font(.system(size: 16))
                             .foregroundColor(.primary)
+                            .frame(width: 32, height: 32)
                     }
 
                     // History Folder Button
                     NavigationLink(destination: HistoryListView()) {
-                        Image(systemName: "folder")
+                        Image(systemName: "folder.fill")
+                            .font(.system(size: 16))
                             .foregroundColor(.primary)
+                            .frame(width: 32, height: 32)
                     }
                 }
             }
-            .confirmationDialog("Start Track Recording", isPresented: $showStartDialog, titleVisibility: .visible) {
-                Button("Start Real GPS Recording") {
+            .alert("Start Track Recording", isPresented: $showStartDialog) {
+                TextField("Track Name", text: $trackTitleInput)
+                Button("Start Recording") {
                     locManager.startTracking(title: trackTitleInput)
                     showToast("GPS Recording started")
                 }
-                Button("Start Demo Simulation (For Appetize & Simulator)") {
-                    locManager.startSimulation(title: "Appetize Test Drive")
-                    showToast("Demo simulation active: moving and climbing")
-                }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("Select recording mode. In Appetize.io/Simulator, choose 'Demo Simulation' to see the speedometer, altitude diagram and map animate live!")
+                Text("Enter a title for your track. Recording will proceed in the background and auto-save as KMZ format.")
             }
             .confirmationDialog("Stop Recording?", isPresented: $showStopConfirmDialog, titleVisibility: .visible) {
                 Button("Stop & Save KMZ", role: .destructive) {
@@ -317,9 +312,7 @@ public struct ContentView: View {
     }
 
     private var statusIndicatorColor: Color {
-        if locManager.isSimulationMode {
-            return .orange
-        } else if locManager.isTracking {
+        if locManager.isTracking {
             return .green
         } else if locManager.isGpsActive && locManager.currentCoordinate != nil {
             return Color(red: 0, green: 0.85, blue: 0.3)
@@ -329,9 +322,7 @@ public struct ContentView: View {
     }
 
     private var statusSubtitle: String {
-        if locManager.isSimulationMode {
-            return locManager.isPaused ? "Demo Simulation Paused" : "Demo Simulation (~55 km/h)"
-        } else if locManager.isTracking {
+        if locManager.isTracking {
             return locManager.isPaused ? "Recording Paused" : "Recording Active (Background)"
         } else if locManager.isGpsActive && locManager.currentCoordinate != nil {
             return String(format: "GPS Active • ±%.0fm", locManager.accuracyMeters)
