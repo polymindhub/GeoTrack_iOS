@@ -208,8 +208,28 @@ public struct ContentView: View {
                     }
                 }
 
-                // Top Trailing: Record Button + Day/Night Toggle + History
+                // Top Trailing: Record Button + Demo Simulation + Day/Night Toggle + History
                 ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    // Demo Simulation Button (Specially for Appetize.io & Simulator testing)
+                    if !locManager.isTracking {
+                        Button(action: {
+                            locManager.startSimulation(title: "Appetize Test Drive")
+                            showToast("Demo Simulation started! Moving at ~55 km/h")
+                        }) {
+                            HStack(spacing: 3) {
+                                Image(systemName: "car.fill")
+                                Text("Demo")
+                                    .font(.caption)
+                                    .fontWeight(.bold)
+                            }
+                            .foregroundColor(.orange)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 5)
+                            .background(Color.orange.opacity(0.14))
+                            .cornerRadius(10)
+                        }
+                    }
+
                     // Record Action Button
                     if !locManager.isTracking {
                         Button(action: {
@@ -269,15 +289,18 @@ public struct ContentView: View {
                     }
                 }
             }
-            .alert("Start New Track", isPresented: $showStartDialog) {
-                TextField("Track Name", text: $trackTitleInput)
-                Button("Start") {
+            .confirmationDialog("Start Track Recording", isPresented: $showStartDialog, titleVisibility: .visible) {
+                Button("Start Real GPS Recording") {
                     locManager.startTracking(title: trackTitleInput)
-                    showToast("Recording started in background")
+                    showToast("GPS Recording started")
+                }
+                Button("Start Demo Simulation (For Appetize & Simulator)") {
+                    locManager.startSimulation(title: "Appetize Test Drive")
+                    showToast("Demo simulation active: moving and climbing")
                 }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("Track will record in background with live speed, altitude, and location. It will automatically save as KMZ when stopped.")
+                Text("Select recording mode. In Appetize.io/Simulator, choose 'Demo Simulation' to see the speedometer, altitude diagram and map animate live!")
             }
             .confirmationDialog("Stop Recording?", isPresented: $showStopConfirmDialog, titleVisibility: .visible) {
                 Button("Stop & Save KMZ", role: .destructive) {
@@ -294,7 +317,9 @@ public struct ContentView: View {
     }
 
     private var statusIndicatorColor: Color {
-        if locManager.isTracking {
+        if locManager.isSimulationMode {
+            return .orange
+        } else if locManager.isTracking {
             return .green
         } else if locManager.isGpsActive && locManager.currentCoordinate != nil {
             return Color(red: 0, green: 0.85, blue: 0.3)
@@ -304,7 +329,9 @@ public struct ContentView: View {
     }
 
     private var statusSubtitle: String {
-        if locManager.isTracking {
+        if locManager.isSimulationMode {
+            return locManager.isPaused ? "Demo Simulation Paused" : "Demo Simulation (~55 km/h)"
+        } else if locManager.isTracking {
             return locManager.isPaused ? "Recording Paused" : "Recording Active (Background)"
         } else if locManager.isGpsActive && locManager.currentCoordinate != nil {
             return String(format: "GPS Active • ±%.0fm", locManager.accuracyMeters)
