@@ -208,7 +208,7 @@ public struct RecordDetailView: View {
     }
 
     private var currentPoint: TrackPointItem? {
-        guard !points.isEmpty, replayIndex in points.indices else { return nil }
+        guard !points.isEmpty, points.indices.contains(replayIndex) else { return nil }
         return points[replayIndex]
     }
 
